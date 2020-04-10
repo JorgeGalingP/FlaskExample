@@ -21,13 +21,12 @@ def index():
         try:
             url = request.form['url']
             r = requests.get(url)
-            data = r.text
             print(r.text)
         except:
             errors.append(
                 "Unable to get URL. Please make sure it's valid and try again."
             )
-    return render_template('index.html', errors = errors, results = results, data = data)
+    return render_template('index.html', errors = errors, results = results)
 
 
 if __name__ == '__main__':
