@@ -14,7 +14,7 @@ from rq.job import Job
 from worker import conn
 
 
-template_dir = os.path.abspath('../templates')
+template_dir = os.path.abspath('../frontend/templates')
 app = Flask(__name__, template_folder=template_dir)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
