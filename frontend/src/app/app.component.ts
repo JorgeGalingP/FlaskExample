@@ -11,7 +11,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Wordcount';
   jobSub: Subscription;
-  jobId: any;
+  jobId: string;
+  results: any;
   urlForm = new FormGroup({
     url: new FormControl(''),
   });
@@ -23,11 +24,21 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(){
-    this.jobSub = this.wordcountService.getJobId(this.urlForm.value.url).subscribe(res => {
-      this.jobId = res;
-    },
-    console.error
-  );
+    this.jobSub = this.wordcountService.getJobId(this.urlForm.value.url).subscribe(
+      res => {
+        this.jobId = res;
+      },
+      console.error
+    );
+  }
+
+  getResults(){
+    this.wordcountService.getResults(this.jobId).subscribe(
+      res => {
+        this.results = res;
+      },
+      console.error
+    );
   }
 
   ngOnDestroy() {

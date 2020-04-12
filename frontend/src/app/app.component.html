@@ -41,6 +41,14 @@
     <button type="submit" [disabled]="!urlForm.valid">Submit</button>
   
   </form>
+  
+  <div>
+    <button type="submit" (click)="getResults()">Get Results</button>
+  </div>
+  
+  <div>
+    <p> {{ results }} </p>
+  </div>
 </div>
 
 <router-outlet></router-outlet>
