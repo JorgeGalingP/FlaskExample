@@ -3,7 +3,7 @@ import requests
 import operator
 import re
 import nltk
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from stop_words import stops
@@ -32,9 +32,7 @@ def count_and_save_words(url):
     try:
         r = requests.get(url)
     except:
-        errors.append(
-            "Unable to get URL. Please make sure it's valid and try again."
-        )
+        errors.append("Unable to get URL. Please make sure it's valid and try again.")
         return {"error": errors}
 
     # text processing
@@ -68,28 +66,24 @@ def count_and_save_words(url):
         errors.append("Unable to add item to database.")
         return {"error": errors}
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    results = {}
+@app.route('/execute', methods=['POST'])
+def execute():
 
-    if request.method == "POST":
-        # this import solves a rq bug which currently exists
-        from app import count_and_save_words
+    # this import solves a rq bug which currently exists
+    from app import count_and_save_words
 
-        # get url that the person has entered
-        url = request.form['url']
+    # get url that the person has entered
+    url = request.form['url']
 
-        if not url[:8].startswith(('https://', 'http://')):
-            url = 'http://' + url
-        job = q.enqueue_call(
-            func=count_and_save_words, # func to add a new job to the queue
-            args=(url,), # arguments to that func
-            result_ttl=5000 # hold on to the result of the job for 5000 seconds
-        )
+    if not url[:8].startswith(('https://', 'http://')):
+        url = 'http://' + url
+    job = q.enqueue_call(
+        func=count_and_save_words, # func to add a new job to the queue
+        args=(url,), # arguments to that func
+        result_ttl=5000 # hold on to the result of the job for 5000 seconds
+    )
 
-        print(job.get_id())
-
-    return render_template('index.html', results=results)
+    return jsonify(job.get_id())
 
 
 @app.route("/results/<job_key>", methods=['GET'])
