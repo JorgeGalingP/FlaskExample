@@ -4,7 +4,7 @@ An app to count the words in a given url
 # Some needed commands
 cd /backend/
 
-pg_ctlcluster
+pg_lsclusters
 
 pg_ctlcluster 11 main start
 
