@@ -1,7 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
+import { startWith, switchMap, map } from "rxjs/operators";
+
+import { Title } from '@angular/platform-browser';
 import { WordcountSevice } from './wordcount/wordcount.service';
 import { FormGroup, FormControl } from '@angular/forms';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -11,37 +15,60 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Wordcount';
   jobSub: Subscription;
-  jobId: string;
-  results: any;
+  results: string[];
   urlForm = new FormGroup({
     url: new FormControl(''),
   });
+  pollingResults:any;
+  show = false;
+  
 
-  constructor(private wordcountService: WordcountSevice) {
+  constructor(private titleService: Title ,
+    private wordcountService: WordcountSevice) {
+      this.titleService.setTitle(this.title)
   }
 
   ngOnInit() {
   }
 
-  onSubmit(){
+  onSubmit() {
     this.jobSub = this.wordcountService.getJobId(this.urlForm.value.url).subscribe(
       res => {
-        this.jobId = res;
+        let jobId = res;
+
+        this.getResults(jobId)
       },
-      console.error
+      err => {
+        console.error(err);
+      }
     );
   }
 
-  getResults(){
-    this.wordcountService.getResults(this.jobId).subscribe(
+  getResults(jobId: string) {
+    let count = 0;
+    this.pollingResults = interval(1000)
+    .pipe(
+      startWith(0),
+      switchMap(() => this.wordcountService.getResults(jobId)),
+    )
+    .subscribe(
       res => {
-        this.results = res;
+        count += 1;
+        this.results = res.body;
+        
+        if (count > 45 || res.status == 200) {   
+            this.show = true;  
+            this.pollingResults.unsubscribe();          
+        }
       },
-      console.error
+      err => {
+        console.error(err);
+      }
     );
-  }
+}
 
   ngOnDestroy() {
     this.jobSub.unsubscribe();
+    this.pollingResults.unsubscribe();
   }
 }

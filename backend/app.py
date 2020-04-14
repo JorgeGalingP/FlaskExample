@@ -3,6 +3,7 @@ import requests
 import operator
 import re
 import nltk
+import json
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -14,8 +15,7 @@ from rq.job import Job
 from worker import conn
 
 
-template_dir = os.path.abspath('../frontend/templates')
-app = Flask(__name__, template_folder=template_dir)
+app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 CORS(app)
@@ -67,23 +67,23 @@ def count_and_save_words(url):
         return {"error": errors}
 
 @app.route('/execute', methods=['POST'])
-def execute():
+def get_counts():
 
     # this import solves a rq bug which currently exists
     from app import count_and_save_words
 
-    # get url that the person has entered
-    url = request.form['url']
+    # get url
+    data = json.loads(request.data.decode())
+    url = data["url"]
 
     if not url[:8].startswith(('https://', 'http://')):
         url = 'http://' + url
-    job = q.enqueue_call(
-        func=count_and_save_words, # func to add a new job to the queue
-        args=(url,), # arguments to that func
-        result_ttl=5000 # hold on to the result of the job for 5000 seconds
-    )
 
-    return jsonify(job.get_id())
+    # start job
+    job = q.enqueue_call(
+        func = count_and_save_words, args=(url,), result_ttl=5000)
+
+    return job.get_id()
 
 
 @app.route("/results/<job_key>", methods=['GET'])
@@ -99,9 +99,9 @@ def get_results(job_key):
             reverse=True
         )[:10]
 
-        return jsonify(results) 
+        return jsonify(results)
     else:
-        return "Nay!", 202
+        return jsonify("Nay!"), 202
 
 
 if __name__ == '__main__':

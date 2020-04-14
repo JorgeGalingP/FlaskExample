@@ -6,7 +6,7 @@ cd /backend/
 
 pg_lsclusters
 
-pg_ctlcluster 11 main start
+pg_ctlcluster 12 main start
 
 redis-server
 
