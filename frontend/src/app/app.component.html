@@ -12,14 +12,22 @@
     </div>
     <div class="row" *ngIf="show">
       <div class="col-md-4">
-        <div> 
-          <p>Results:</p>
-            <ul>
-              <li *ngFor="let result of results">
-                {{ result }}
-              </li>
-            </ul>
-        </div>
+        <table class="table table-striped"> 
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Word</th>
+              <th scope="col">Repetitions </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let result of results; index as i">
+              <th scope="row">{{ i + 1 }}</th>
+              <td>{{ result[0] }}</td>
+              <td>{{ result[1] }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div class="col-md-8">
         <div> 
@@ -36,9 +44,9 @@
         <form class="row" [formGroup]="urlForm" (ngSubmit)="onSubmit()">
           <div class="col-md-12">
             <div class="form-group">
-              <input class="form-control" type="text" formControlName="url" placeholder="Search...">
+              <input class="form-control" type="text" formControlName="url" placeholder="Enter a valid url...">
             </div>
-            <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="!urlForm.valid">Submit</button>
+            <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="!urlForm.valid">Go!</button>
           </div>
         </form>
       </div>
