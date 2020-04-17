@@ -15,12 +15,12 @@ import { HttpResponse } from '@angular/common/http';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Wordcount';
   jobSub: Subscription;
-  results: string[];
+  results: string[][];
   urlForm = new FormGroup({
     url: new FormControl(''),
   });
   pollingResults:any;
-  show = false;
+  show = true;
   
 
   constructor(private titleService: Title ,
@@ -29,6 +29,21 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // only for testing chart config
+    let res: string[][] = [
+      ["Python", "40"],
+      ["Angular", "28"],
+      ["Typescript", "23"],
+      ["Postgres", "19"],
+      ["Redis", "18"],
+      ["VSCode", "14"],
+      ["SQL", "10"],
+      ["MongoDB", "9"],
+      ["CSharp", "4"],
+      [".NET", "1"],
+    ]
+
+    this.results = res;
   }
 
   onSubmit() {

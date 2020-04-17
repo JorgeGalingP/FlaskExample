@@ -2,18 +2,22 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ChartsModule } from 'ng2-charts';
+import { AppComponent } from './app.component';
 import { WordcountSevice } from './wordcount/wordcount.service';
+import { ResultsChartComponent } from './results-chart/results-chart.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ResultsChartComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
+    ChartsModule,
     AppRoutingModule
   ],
   providers: [ WordcountSevice, Title ],
