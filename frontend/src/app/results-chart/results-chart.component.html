@@ -1,10 +1,12 @@
-<div class="chart-wrapper">
-    <canvas baseChart height="60vh" width="80vw"
-    [datasets]="barChartData"
-    [labels]="barChartLabels"
-    [options]="barChartOptions"
-    [plugins]="barChartPlugins"
-    [legend]="barChartLegend"
-    [chartType]="barChartType">
-  </canvas>
+<div>
+  <div class="chart-wrapper">
+      <canvas baseChart
+      [datasets]="barChartData"
+      [labels]="barChartLabels"
+      [options]="barChartOptions"
+      [plugins]="barChartPlugins"
+      [legend]="barChartLegend"
+      [chartType]="barChartType">
+    </canvas>
+  </div>
 </div>
