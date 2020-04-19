@@ -22,6 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
   });
   pollingResults:any;
   show = false;
+  loading = false;
 
   constructor(private titleService: Title ,
     private wordcountService: WordcountSevice) {
@@ -52,11 +53,13 @@ export class AppComponent implements OnInit, OnDestroy {
     )
     .subscribe(
       res => {
+        this.loading = true;
         count += 1;
         
         if (count > 45 || res.status == 200) {   
             this.show = true;  
             this.results = res.body;
+            this.loading = false;
             this.pollingResults.unsubscribe();          
         }
       },

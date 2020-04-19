@@ -5,6 +5,16 @@
     A word count app to know the leaderboard of words in a webpage  
   </p>
   <div class="container">
+    <div class="row"  *ngIf="loading">
+      <div class="col-md-12">
+        <hr>
+        <div class="d-flex align-items-center">
+          <p class="lead">Loading...</p>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+      </div>
+      <hr>
+    </div>
     <div class="row" *ngIf="show">
       <div class="col-md-12">
         <hr>
