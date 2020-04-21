@@ -35,8 +35,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.jobSub = this.wordcountService.getJobId(this.urlForm.value.url).subscribe(
       res => {
         let jobId = res;
-
-        this.getResults(jobId)
+        
+        this.getResults(jobId);
       },
       err => {
         console.error(err);
@@ -60,7 +60,7 @@ export class AppComponent implements OnInit, OnDestroy {
             this.show = true;  
             this.results = res.body;
             this.loading = false;
-            this.pollingResults.unsubscribe();          
+            this.pollingResults.unsubscribe();
         }
       },
       err => {

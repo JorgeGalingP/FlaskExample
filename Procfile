@@ -1,2 +1,1 @@
-web: gunicorn app:app
-python-3.8.1
+web: sh heroku.sh
